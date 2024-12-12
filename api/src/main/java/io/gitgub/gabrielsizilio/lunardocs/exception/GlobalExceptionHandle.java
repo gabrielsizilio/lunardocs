@@ -1,5 +1,7 @@
 package io.gitgub.gabrielsizilio.lunardocs.exception;
 
+import io.gitgub.gabrielsizilio.lunardocs.exception.customException.ConflictException;
+import io.gitgub.gabrielsizilio.lunardocs.exception.customException.UserNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;

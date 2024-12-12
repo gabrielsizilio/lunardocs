@@ -1,4 +1,4 @@
-package io.gitgub.gabrielsizilio.lunardocs.exception;
+package io.gitgub.gabrielsizilio.lunardocs.exception.customException;
 
 public class UserNotFoundException extends RuntimeException {
     public UserNotFoundException(String message) {
