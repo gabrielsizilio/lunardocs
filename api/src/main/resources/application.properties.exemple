@@ -7,3 +7,7 @@ spring.datasource.password=<?>
 upload.document.directory=${?}
 api.security.token.secret=${?}
 api.security.token.expiration.time=${?}
+
+spring.servlet.multipart.enabled=true
+spring.servlet.multipart.max-file-size=10MB
+spring.servlet.multipart.max-request-size=10MB
