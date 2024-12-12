@@ -6,7 +6,7 @@
 ![Status](https://img.shields.io/badge/api-Em%20Desenvolvimento-yellow)
 
 
-O SignDocs é uma aplicação web construída em Java, utilizando o framework Spring, e por enquanto, React para clients web,  que gerencia a assinatura digital de documentos. Ele permite que os usuários façam login, upload de documentos, definam signatários e gerenciem o fluxo de assinaturas com segurança e eficiência.
+O LunarDocs é uma aplicação web construída em Java, utilizando o framework Spring, e por enquanto, React para clients web,  que gerencia a assinatura digital de documentos. Ele permite que os usuários façam login, upload de documentos, definam signatários e gerenciem o fluxo de assinaturas com segurança e eficiência.
 
 ## Funcionalidades 🛠️
 - 🔐 Autenticação JWT: Login seguro e autenticação stateless com JSON Web Tokens.
@@ -25,13 +25,3 @@ O SignDocs é uma aplicação web construída em Java, utilizando o framework Sp
 
 - Spring Data JPA: Gerenciamento de persistência de dados.
 - Banco de Dados: PostgreSQL
-
-## Endpoints da API 📜
-### Autenticação
-- 📥 POST /auth/register: Registro de usuários. (livre)
-- 📥 POST /auth/login: Login de usuários e geração de tokens JWT. (livre)
-
-
-### Documentos
-- 📤 POST /document/upload: Upload de um documento (somente para ADMIN).
-- 🔍 GET /document/{id}: Busca de informações sobre um documento. (somente para USER)
