@@ -1,5 +1,6 @@
 package io.gitgub.gabrielsizilio.lunardocs.domain.user;
 
+import io.gitgub.gabrielsizilio.lunardocs.domain.document.Document;
 import jakarta.persistence.*;
 import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;
@@ -24,6 +25,9 @@ public class User implements UserDetails {
     private String email;
     private String password;
     private UserRole role;
+
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
+    private List<Document> ownedDocuments;
 
     @CreatedDate
     @Column(name = "created_at", nullable = false, updatable = false)
