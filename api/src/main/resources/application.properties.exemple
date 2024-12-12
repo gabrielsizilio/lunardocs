@@ -1,0 +1,9 @@
+spring.application.name=lunardocs
+
+spring.datasource.url=jdbc:postgresql://localhost:5432/<?>
+spring.datasource.username=<?>
+spring.datasource.password=<?>
+
+upload.document.directory=${?}
+api.security.token.secret=${?}
+api.security.token.expiration.time=${?}
