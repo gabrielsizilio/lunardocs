@@ -2,14 +2,15 @@ package io.gitgub.gabrielsizilio.lunardocs.controllers;
 
 import io.gitgub.gabrielsizilio.lunardocs.domain.document.dto.DocumentDTO;
 import io.gitgub.gabrielsizilio.lunardocs.domain.document.dto.DocumentRequestDTO;
+import io.gitgub.gabrielsizilio.lunardocs.domain.document.dto.DocumentResponseDTO;
 import io.gitgub.gabrielsizilio.lunardocs.services.DocumentService;
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -22,7 +23,7 @@ public class DocumentController {
         this.documentService = documentService;
     }
 
-    @PostMapping("create")
+    @PostMapping("upload")
     public ResponseEntity<String> uploadDocument(@RequestParam("file") MultipartFile file,
                                                  @RequestParam(value = "name", required = false) String name,
                                                  @RequestParam(value = "description", required = false) String description,
@@ -36,5 +37,12 @@ public class DocumentController {
         documentService.create(documentDTO);
 
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("findAll")
+    public ResponseEntity<List<DocumentResponseDTO>> findAllDocuments() {
+        List<DocumentResponseDTO> documents = documentService.findAllDocuments();
+
+        return new ResponseEntity<>(documents, HttpStatus.OK);
     }
 }

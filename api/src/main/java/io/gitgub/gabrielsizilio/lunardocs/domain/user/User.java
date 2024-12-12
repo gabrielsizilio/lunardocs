@@ -1,5 +1,6 @@
 package io.gitgub.gabrielsizilio.lunardocs.domain.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.gitgub.gabrielsizilio.lunardocs.domain.document.Document;
 import io.gitgub.gabrielsizilio.lunardocs.domain.document.DocumentSigner;
 import jakarta.persistence.*;
