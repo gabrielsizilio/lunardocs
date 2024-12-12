@@ -1,6 +1,6 @@
 package io.gitgub.gabrielsizilio.lunardocs.services;
 
-import io.gitgub.gabrielsizilio.lunardocs.exception.UserNotFoundException;
+import io.gitgub.gabrielsizilio.lunardocs.exception.customException.UserNotFoundException;
 import io.gitgub.gabrielsizilio.lunardocs.repository.UserDetailRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;

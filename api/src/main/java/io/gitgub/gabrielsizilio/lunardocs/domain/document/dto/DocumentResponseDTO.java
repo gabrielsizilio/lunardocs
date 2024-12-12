@@ -1,4 +1,6 @@
 package io.gitgub.gabrielsizilio.lunardocs.domain.document.dto;
 
-public record DocumentResponseDTO() {
+import java.util.UUID;
+
+public record DocumentResponseDTO(UUID id, String ownerName, String name, String description, String url) {
 }

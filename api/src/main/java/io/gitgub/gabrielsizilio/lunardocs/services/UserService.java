@@ -4,8 +4,8 @@ import io.gitgub.gabrielsizilio.lunardocs.domain.user.User;
 import io.gitgub.gabrielsizilio.lunardocs.domain.user.UserRole;
 import io.gitgub.gabrielsizilio.lunardocs.domain.user.dto.UserRequestDTO;
 import io.gitgub.gabrielsizilio.lunardocs.domain.user.dto.UserResponseDTO;
-import io.gitgub.gabrielsizilio.lunardocs.exception.ConflictException;
-import io.gitgub.gabrielsizilio.lunardocs.exception.UserNotFoundException;
+import io.gitgub.gabrielsizilio.lunardocs.exception.customException.ConflictException;
+import io.gitgub.gabrielsizilio.lunardocs.exception.customException.UserNotFoundException;
 import io.gitgub.gabrielsizilio.lunardocs.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -57,6 +57,15 @@ public class UserService {
         List<User> users = userRepository.findAll();
 
         return users.stream().map(this::convertToResponseDTO).collect(Collectors.toList());
+    }
+
+    public User findUserById(UUID id) {
+        Optional<User> userOptional = userRepository.findById(id);
+        if(userOptional.isPresent()) {
+            return userOptional.get();
+        } else {
+            throw new UserNotFoundException("User not found with id: " + id);
+        }
     }
 
     //UPDATE
