@@ -1,6 +1,7 @@
 package io.gitgub.gabrielsizilio.lunardocs.domain.user;
 
 import io.gitgub.gabrielsizilio.lunardocs.domain.document.Document;
+import io.gitgub.gabrielsizilio.lunardocs.domain.document.DocumentSigner;
 import jakarta.persistence.*;
 import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;
@@ -29,6 +30,9 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
     private List<Document> ownedDocuments;
 
+    @OneToMany(mappedBy = "signer")
+    private List<DocumentSigner> documentSigners;
+
     @CreatedDate
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
@@ -56,6 +60,22 @@ public class User implements UserDetails {
         this.email = email;
         this.password = setPassword(password);
         this.role = role;
+    }
+
+    public List<Document> getOwnedDocuments() {
+        return ownedDocuments;
+    }
+
+    public void setOwnedDocuments(List<Document> ownedDocuments) {
+        this.ownedDocuments = ownedDocuments;
+    }
+
+    public List<DocumentSigner> getDocumentSigners() {
+        return documentSigners;
+    }
+
+    public void setDocumentSigners(List<DocumentSigner> documentSigners) {
+        this.documentSigners = documentSigners;
     }
 
     public void setId(UUID id) {

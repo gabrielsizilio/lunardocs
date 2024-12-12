@@ -7,11 +7,11 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Table(name = "documents")
 @Entity(name = "documents")
-@NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
 public class Document {
@@ -26,6 +26,8 @@ public class Document {
     private String url;
     private StatusDocument status;
 
+    @OneToMany(mappedBy = "document")
+    private List<DocumentSigner> signers;
 
     @CreatedDate
     @Column(name = "created_at", nullable = false, updatable = false)
@@ -56,6 +58,14 @@ public class Document {
         this.url = url;
         this.status = status;
         onCreate();
+    }
+
+    public List<DocumentSigner> getSigners() {
+        return signers;
+    }
+
+    public void setSigners(List<DocumentSigner> signers) {
+        this.signers = signers;
     }
 
     public String getUrl() {
