@@ -45,4 +45,10 @@ public class DocumentController {
 
         return new ResponseEntity<>(documents, HttpStatus.OK);
     }
+
+    @GetMapping("myDocuments")
+    public ResponseEntity<List<DocumentResponseDTO>> findMyDocuments() {
+        List<DocumentResponseDTO> documents = documentService.findMyDocuments();
+        return new ResponseEntity<>(documents, HttpStatus.OK);
+    }
 }

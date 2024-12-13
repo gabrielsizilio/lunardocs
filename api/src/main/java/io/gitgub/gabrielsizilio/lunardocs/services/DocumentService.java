@@ -64,6 +64,12 @@ public class DocumentService {
         return documents.stream().map(this::convertToResponseDTO).collect(Collectors.toList());
     }
 
+    public List<DocumentResponseDTO> findMyDocuments() {
+        User owner = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        List<Document> myDocuments = documentRepository.findDocumentByOwnerId(owner.getId());
+        return myDocuments.stream().map(this::convertToResponseDTO).collect(Collectors.toList());
+    }
+
 //    UPDATE
 //    DELETE
 
