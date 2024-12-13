@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -23,7 +24,7 @@ public class FileUltils {
         }
     }
 
-    public static String generateFileName(String fileName, UUID id) {
+    public static String generateFileName(UUID id, String fileName) {
         return id + "_" + fileName;
     }
 
@@ -34,4 +35,33 @@ public class FileUltils {
         Files.copy(file.getInputStream(), path);
         return path.toString();
     }
+
+    public String updateFileName(String newName, UUID idDocument) throws IOException {
+        ensureDirectoryExists();
+
+        Path existPath = findFileById(idDocument);
+        if(Files.exists(existPath)) {
+            Path newPath = Paths.get(uploadDirectory, generateFileName(idDocument, newName));
+            Files.move(existPath, newPath);
+
+            return newPath.toString();
+        } else {
+            throw new FileNotFoundException("File not found with id: " + idDocument);
+        }
+    }
+
+    public Path findFileById(UUID id) {
+        File folder = new File(uploadDirectory);
+        File[] listOfFiles = folder.listFiles();
+
+        if(listOfFiles != null) {
+            for (File file : listOfFiles) {
+                if (file.getName().startsWith(id.toString())) {
+                    return file.toPath();
+                }
+            }
+        }
+        return null;
+    }
+
 }
