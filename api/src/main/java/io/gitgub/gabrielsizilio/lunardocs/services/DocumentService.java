@@ -3,11 +3,13 @@ package io.gitgub.gabrielsizilio.lunardocs.services;
 import io.gitgub.gabrielsizilio.lunardocs.domain.document.Document;
 import io.gitgub.gabrielsizilio.lunardocs.domain.document.StatusDocument;
 import io.gitgub.gabrielsizilio.lunardocs.domain.document.dto.DocumentDTO;
+import io.gitgub.gabrielsizilio.lunardocs.domain.document.dto.DocumentRequestDTO;
 import io.gitgub.gabrielsizilio.lunardocs.domain.document.dto.DocumentResponseDTO;
 import io.gitgub.gabrielsizilio.lunardocs.domain.user.User;
 import io.gitgub.gabrielsizilio.lunardocs.domain.user.dto.UserResponseDTO;
 import io.gitgub.gabrielsizilio.lunardocs.repository.DocumentRepository;
 import io.gitgub.gabrielsizilio.lunardocs.ultils.FileUltils;
+import io.gitgub.gabrielsizilio.lunardocs.ultils.SecurityUtils;
 import io.gitgub.gabrielsizilio.lunardocs.ultils.UUIDUtils;
 import jakarta.transaction.Transactional;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -16,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -47,7 +50,7 @@ public class DocumentService {
             fileName = file.getOriginalFilename();
         }
 
-        String fileNameId = FileUltils.generateFileName(fileName, fileId);
+        String fileNameId = FileUltils.generateFileName(fileId, fileName);
 
         fileUltils.uploadDocument(file, fileNameId);
 
@@ -71,11 +74,30 @@ public class DocumentService {
     }
 
 //    UPDATE
+    @Transactional
+    public DocumentResponseDTO update(UUID documentId, DocumentRequestDTO data) throws IOException {
+        UUID userLogged = SecurityUtils.getUserId();
+        Optional<Document> documentOptional = documentRepository.findDocumentByIdAndOwnerId(documentId, userLogged);
+
+        if(documentOptional.isEmpty()) {
+            throw new IllegalArgumentException("Document not found");
+        }
+
+        Document document = documentOptional.get();
+        document.setName(data.name());
+        document.setDescription(data.description());
+        document.setStatus(StatusDocument.valueOf(data.statusDocument()));
+
+        fileUltils.updateFileName(document.getName(), document.getId());
+        documentRepository.save(document);
+
+        return convertToResponseDTO(document);
+    }
 //    DELETE
 
     private DocumentResponseDTO convertToResponseDTO(Document document) {
         User owner = document.getOwner();
         UserResponseDTO ownerDto = new UserResponseDTO(owner.getId(), owner.getFirstName(), owner.getLastName(), owner.getEmail() ,owner.getRole().toString());
-        return new DocumentResponseDTO(ownerDto, document.getName(), document.getDescription(), document.getStatus().toString());
+        return new DocumentResponseDTO(document.getId(), ownerDto, document.getName(), document.getDescription(), document.getStatus().toString());
     }
 }

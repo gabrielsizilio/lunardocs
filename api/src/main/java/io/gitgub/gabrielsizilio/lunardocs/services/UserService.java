@@ -1,5 +1,7 @@
 package io.gitgub.gabrielsizilio.lunardocs.services;
 
+import io.gitgub.gabrielsizilio.lunardocs.domain.document.Document;
+import io.gitgub.gabrielsizilio.lunardocs.domain.document.dto.DocumentRequestDTO;
 import io.gitgub.gabrielsizilio.lunardocs.domain.user.User;
 import io.gitgub.gabrielsizilio.lunardocs.domain.user.UserRole;
 import io.gitgub.gabrielsizilio.lunardocs.domain.user.dto.UserRequestDTO;
