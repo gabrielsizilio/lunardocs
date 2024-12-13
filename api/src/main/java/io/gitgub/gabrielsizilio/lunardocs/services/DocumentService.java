@@ -111,6 +111,6 @@ public class DocumentService {
     private DocumentResponseDTO convertToResponseDTO(Document document) {
         User owner = document.getOwner();
         UserResponseDTO ownerDto = new UserResponseDTO(owner.getId(), owner.getFirstName(), owner.getLastName(), owner.getEmail() ,owner.getRole().toString());
-        return new DocumentResponseDTO(document.getId(), ownerDto, document.getName(), document.getDescription(), document.getStatus().toString());
+        return new DocumentResponseDTO(document.getId(), ownerDto, document.getName(), document.getDescription(), document.getStatus().toString(), document.getCreatedAt(), document.getUpdatedAt());
     }
 }
