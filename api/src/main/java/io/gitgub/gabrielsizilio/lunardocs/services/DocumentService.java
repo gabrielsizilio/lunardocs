@@ -93,7 +93,20 @@ public class DocumentService {
 
         return convertToResponseDTO(document);
     }
+
 //    DELETE
+    @Transactional
+    public Boolean deleteDocument(UUID documentId) {
+        UUID userLogged = SecurityUtils.getUserId();
+        Optional<Document> documentOptional = documentRepository.findDocumentByIdAndOwnerId(documentId, userLogged);
+
+        if(documentOptional.isEmpty()) {
+            throw new IllegalArgumentException("Document not found with id " + documentId);
+        }
+
+        documentRepository.delete(documentOptional.get());
+        return true;
+    }
 
     private DocumentResponseDTO convertToResponseDTO(Document document) {
         User owner = document.getOwner();
