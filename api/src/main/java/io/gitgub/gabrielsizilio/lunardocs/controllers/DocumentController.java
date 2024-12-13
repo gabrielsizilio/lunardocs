@@ -51,4 +51,11 @@ public class DocumentController {
         List<DocumentResponseDTO> documents = documentService.findMyDocuments();
         return new ResponseEntity<>(documents, HttpStatus.OK);
     }
+
+    @PutMapping("update/{id}")
+    public ResponseEntity<DocumentResponseDTO> updateDocument(@PathVariable UUID id, @RequestBody DocumentRequestDTO documentRequestDTO) throws IOException {
+        DocumentResponseDTO documentResponseDTO = documentService.update(id, documentRequestDTO);
+
+        return new ResponseEntity<>(documentResponseDTO, HttpStatus.OK);
+    }
 }
