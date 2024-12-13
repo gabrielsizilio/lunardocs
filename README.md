@@ -5,6 +5,10 @@
 ![Status](https://img.shields.io/badge/client--web-Em%20Desenvolvimento-yellow)
 ![Status](https://img.shields.io/badge/api-Em%20Desenvolvimento-yellow)
 
+![JWT](http://jwt.io/img/badge-compatible.svg)
+
+
+
 
 O LunarDocs é uma aplicação web construída em Java, utilizando o framework Spring, e por enquanto, React para clients web,  que gerencia a assinatura digital de documentos. Ele permite que os usuários façam login, upload de documentos, definam signatários e gerenciem o fluxo de assinaturas com segurança e eficiência.
 
