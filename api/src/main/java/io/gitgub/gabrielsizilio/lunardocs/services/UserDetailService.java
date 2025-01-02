@@ -15,11 +15,6 @@ public class UserDetailService {
     }
 
     public UserDetails findByEmail(String email) {
-        UserDetails userDetails = userDetailRepository.findByEmail(email);
-        if (userDetails != null) {
-            return userDetails;
-        } else {
-            throw new UserNotFoundException("Could not find user with email: " + email);
-        }
+        return userDetailRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException("Could not find user with email: " + email));
     }
 }

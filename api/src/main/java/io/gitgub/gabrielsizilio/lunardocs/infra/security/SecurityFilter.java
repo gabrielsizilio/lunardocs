@@ -1,6 +1,5 @@
 package io.gitgub.gabrielsizilio.lunardocs.infra.security;
 
-import io.gitgub.gabrielsizilio.lunardocs.repository.UserDetailRepository;
 import io.gitgub.gabrielsizilio.lunardocs.services.UserDetailService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -31,7 +30,6 @@ public class SecurityFilter extends OncePerRequestFilter {
         if (token != null) {
             var subject = tokenService.validateToken(token);
             UserDetails userDetails = userDetailService.findByEmail(subject);
-
             var authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }

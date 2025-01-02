@@ -5,7 +5,7 @@ CREATE TABLE documents (
     description TEXT,
     status SMALLINT NOT NULL,
     url VARCHAR(255) NOT NULL,
-    created_at TIMESTAMP NOT NULL,
-    updated_at TIMESTAMP NOT NULL,
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW(),
     FOREIGN KEY (owner_id) REFERENCES users (id)
 );

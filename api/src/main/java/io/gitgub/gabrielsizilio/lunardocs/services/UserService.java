@@ -1,7 +1,5 @@
 package io.gitgub.gabrielsizilio.lunardocs.services;
 
-import io.gitgub.gabrielsizilio.lunardocs.domain.document.Document;
-import io.gitgub.gabrielsizilio.lunardocs.domain.document.dto.DocumentRequestDTO;
 import io.gitgub.gabrielsizilio.lunardocs.domain.user.User;
 import io.gitgub.gabrielsizilio.lunardocs.domain.user.UserRole;
 import io.gitgub.gabrielsizilio.lunardocs.domain.user.dto.UserRequestDTO;
@@ -9,7 +7,7 @@ import io.gitgub.gabrielsizilio.lunardocs.domain.user.dto.UserResponseDTO;
 import io.gitgub.gabrielsizilio.lunardocs.exception.customException.ConflictException;
 import io.gitgub.gabrielsizilio.lunardocs.exception.customException.UserNotFoundException;
 import io.gitgub.gabrielsizilio.lunardocs.repository.UserRepository;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,16 +18,14 @@ import java.util.stream.Collectors;
 @Service
 public class UserService {
     private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
     }
 
     //CREATE
+    @Transactional
     public UserResponseDTO save(UserRequestDTO data) {
-
         Optional<User> userOptional = userRepository.findByEmail(data.email());
         if(userOptional.isPresent()) {
             throw new ConflictException("User already exists");
@@ -38,14 +34,15 @@ public class UserService {
         User user = new User(data.firstName(),
                 data.lastName(),
                 data.email(),
-                data.password(),
+                data.cpf(),
                 UserRole.valueOf(data.role()));
-
         user = userRepository.save(user);
+
         return convertToResponseDTO(user);
     }
 
     //READ
+    @Transactional
     public UserResponseDTO findByEmail(String email) {
         Optional<User> userOptional = userRepository.findByEmail(email);
         if(userOptional.isPresent()) {
@@ -55,12 +52,14 @@ public class UserService {
         }
     }
 
+    @Transactional
     public List<UserResponseDTO> findAll() {
         List<User> users = userRepository.findAll();
 
         return users.stream().map(this::convertToResponseDTO).collect(Collectors.toList());
     }
 
+    @Transactional
     public User findUserById(UUID id) {
         Optional<User> userOptional = userRepository.findById(id);
         if(userOptional.isPresent()) {
@@ -71,20 +70,22 @@ public class UserService {
     }
 
     //UPDATE
+    @Transactional
     public UserResponseDTO updateUser(String id, UserRequestDTO data) {
         Optional<User> userOptional = userRepository.findById(UUID.fromString(id));
+        //Credential credential = credentialService.findCredentialByEmail(data.email());
 
         if(userOptional.isPresent()) {
             User user = userOptional.get();
             user.setFirstName(data.firstName());
             user.setLastName(data.lastName());
             user.setEmail(data.email());
-            if(data.password() != null || !data.password().isEmpty()) {
-                String passwordEncrypted = passwordEncoder.encode(data.password());
-                user.setPassword(passwordEncrypted);
-            }
             user.setRole(UserRole.valueOf(data.role()));
+
             user = userRepository.save(user);
+
+          //  credentialService.updateCredential(String.valueOf(credential.getId()), new CredentialRequestDTO(user.getEmail(), data.password(), user.getId()));
+
             return convertToResponseDTO(user);
         } else {
             throw new UserNotFoundException("User not found with id: " + id);
@@ -92,6 +93,7 @@ public class UserService {
     }
 
     //DELETE
+    @Transactional
     public void delete(String id) {
         UUID uuid = UUID.fromString(id);
         if(userRepository.existsById(uuid)) {
@@ -106,6 +108,7 @@ public class UserService {
                 user.getFirstName(),
                 user.getLastName(),
                 user.getEmail(),
+                user.getCpf(),
                 user.getRole().toString());
     }
 }

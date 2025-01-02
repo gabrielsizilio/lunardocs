@@ -43,6 +43,7 @@ public class SecurityConfiguration {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
                         .requestMatchers(HttpMethod.POST, "auth/login").permitAll()
+                        .requestMatchers(HttpMethod.POST, "auth/register").permitAll()
                         .requestMatchers(HttpMethod.GET, "users/findAll").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "users/findByEmail").hasRole("USER")
                 .anyRequest().authenticated())
