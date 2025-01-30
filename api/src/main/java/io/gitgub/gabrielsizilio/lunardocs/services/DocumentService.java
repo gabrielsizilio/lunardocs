@@ -1,5 +1,6 @@
 package io.gitgub.gabrielsizilio.lunardocs.services;
 
+import io.gitgub.gabrielsizilio.lunardocs.domain.credential.Credential;
 import io.gitgub.gabrielsizilio.lunardocs.domain.document.Document;
 import io.gitgub.gabrielsizilio.lunardocs.domain.document.StatusDocument;
 import io.gitgub.gabrielsizilio.lunardocs.domain.document.dto.DocumentDTO;
@@ -68,8 +69,8 @@ public class DocumentService {
     }
 
     public List<DocumentResponseDTO> findMyDocuments() {
-        User owner = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        List<Document> myDocuments = documentRepository.findDocumentByOwnerId(owner.getId());
+        Credential owner = (Credential) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        List<Document> myDocuments = documentRepository.findDocumentByOwnerId(owner.getUser().getId());
         return myDocuments.stream().map(this::convertToResponseDTO).collect(Collectors.toList());
     }
 
