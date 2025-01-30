@@ -1,8 +1,6 @@
 package io.gitgub.gabrielsizilio.lunardocs.controllers;
 
-import io.gitgub.gabrielsizilio.lunardocs.domain.document.dto.DocumentDTO;
-import io.gitgub.gabrielsizilio.lunardocs.domain.document.dto.DocumentRequestDTO;
-import io.gitgub.gabrielsizilio.lunardocs.domain.document.dto.DocumentResponseDTO;
+import io.gitgub.gabrielsizilio.lunardocs.domain.document.dto.*;
 import io.gitgub.gabrielsizilio.lunardocs.services.DocumentService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -63,5 +61,18 @@ public class DocumentController {
     public ResponseEntity<String> deleteDocument(@PathVariable UUID id) {
         documentService.deleteDocument(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @PostMapping("/{documentId}/signers/{signerId}")
+    public ResponseEntity<String> addSigner(@PathVariable UUID documentId, @PathVariable UUID signerId) {
+        documentService.addSigner(documentId, signerId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/{documentId}/signers")
+    public ResponseEntity<DocumentSignerResponseDTO> getSigners(@PathVariable UUID documentId) {
+        List<DocumentSignerDTO> signers = documentService.getSignerByDocumentId(documentId);
+        DocumentSignerResponseDTO documentSignerResponseDTO = new DocumentSignerResponseDTO(signers);
+        return new ResponseEntity<>(documentSignerResponseDTO, HttpStatus.OK);
     }
 }

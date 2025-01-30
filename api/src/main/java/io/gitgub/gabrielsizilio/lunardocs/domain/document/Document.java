@@ -17,6 +17,7 @@ import java.util.UUID;
 public class Document {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_id", nullable = false)
@@ -26,7 +27,7 @@ public class Document {
     private String url;
     private StatusDocument status;
 
-    @OneToMany(mappedBy = "document")
+    @OneToMany(mappedBy = "document", cascade = CascadeType.ALL)
     private List<DocumentSigner> signers;
 
     @CreatedDate

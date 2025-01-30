@@ -2,13 +2,13 @@ package io.gitgub.gabrielsizilio.lunardocs.services;
 
 import io.gitgub.gabrielsizilio.lunardocs.domain.credential.Credential;
 import io.gitgub.gabrielsizilio.lunardocs.domain.document.Document;
+import io.gitgub.gabrielsizilio.lunardocs.domain.document.DocumentSigner;
 import io.gitgub.gabrielsizilio.lunardocs.domain.document.StatusDocument;
-import io.gitgub.gabrielsizilio.lunardocs.domain.document.dto.DocumentDTO;
-import io.gitgub.gabrielsizilio.lunardocs.domain.document.dto.DocumentRequestDTO;
-import io.gitgub.gabrielsizilio.lunardocs.domain.document.dto.DocumentResponseDTO;
+import io.gitgub.gabrielsizilio.lunardocs.domain.document.dto.*;
 import io.gitgub.gabrielsizilio.lunardocs.domain.user.User;
 import io.gitgub.gabrielsizilio.lunardocs.domain.user.dto.UserResponseDTO;
 import io.gitgub.gabrielsizilio.lunardocs.repository.DocumentRepository;
+import io.gitgub.gabrielsizilio.lunardocs.repository.DocumentSignedRepository;
 import io.gitgub.gabrielsizilio.lunardocs.ultils.FileUltils;
 import io.gitgub.gabrielsizilio.lunardocs.ultils.SecurityUtils;
 import io.gitgub.gabrielsizilio.lunardocs.ultils.UUIDUtils;
@@ -26,11 +26,15 @@ import java.util.stream.Collectors;
 @Service
 public class DocumentService {
     private final FileUltils fileUltils;
+    private final UserService userService;
+    private final DocumentSignedRepository documentSignedRepository;
     DocumentRepository documentRepository;
 
-    public DocumentService(DocumentRepository documentRepository, FileUltils fileUltils) {
+    public DocumentService(DocumentRepository documentRepository, FileUltils fileUltils, UserService userService, DocumentSignedRepository documentSignedRepository) {
         this.documentRepository = documentRepository;
         this.fileUltils = fileUltils;
+        this.userService = userService;
+        this.documentSignedRepository = documentSignedRepository;
     }
 
 //    CREATE
@@ -63,15 +67,23 @@ public class DocumentService {
     }
 
 //    READ
+    @Transactional
     public List<DocumentResponseDTO> findAllDocuments() {
         List<Document> documents = documentRepository.findAll();
         return documents.stream().map(this::convertToResponseDTO).collect(Collectors.toList());
     }
 
+    @Transactional
     public List<DocumentResponseDTO> findMyDocuments() {
         Credential owner = (Credential) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         List<Document> myDocuments = documentRepository.findDocumentByOwnerId(owner.getUser().getId());
         return myDocuments.stream().map(this::convertToResponseDTO).collect(Collectors.toList());
+    }
+
+    @Transactional
+    public Document findDocumentById(UUID documentId) {
+        return documentRepository.findById(documentId)
+                .orElseThrow(() -> new IllegalArgumentException("Document not found with id: " + documentId));
     }
 
 //    UPDATE
@@ -109,6 +121,25 @@ public class DocumentService {
         return true;
     }
 
+    public List<DocumentSignerDTO> getSignerByDocumentId(UUID documentId) {
+        List<DocumentSigner> signers = documentSignedRepository.findByDocumentId(documentId)
+                .orElseThrow(() -> new IllegalArgumentException("Document not found with id " + documentId));
+
+            return signers.stream().map(this::convertToSignerDTO).collect(Collectors.toList());
+    }
+
+    public void addSigner(UUID documentId, UUID userId) {
+        try {
+            Document document = findDocumentById(documentId);
+            User user = userService.findUserById(userId);
+
+            System.out.println(user.toString());
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public void singDocument(UUID documentId) {
 
     }
@@ -117,5 +148,13 @@ public class DocumentService {
         User owner = document.getOwner();
         UserResponseDTO ownerDto = new UserResponseDTO(owner.getId(), owner.getFirstName(), owner.getLastName(), owner.getEmail(), owner.getCpf(),owner.getRole().toString());
         return new DocumentResponseDTO(document.getId(), ownerDto, document.getName(), document.getDescription(), document.getStatus().toString(), document.getCreatedAt(), document.getUpdatedAt());
+    }
+
+    private DocumentSignerDTO convertToSignerDTO(DocumentSigner documentSigner) {
+        return new DocumentSignerDTO(documentSigner.getId(),
+                documentSigner.getSigner(),
+                documentSigner.getAssignedAt(),
+                documentSigner.getSignedAt(),
+                documentSigner.getDocumentHash());
     }
 }

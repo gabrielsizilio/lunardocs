@@ -2,6 +2,9 @@ package io.gitgub.gabrielsizilio.lunardocs.domain.document;
 
 import io.gitgub.gabrielsizilio.lunardocs.domain.user.User;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDate;
@@ -10,6 +13,9 @@ import java.util.UUID;
 
 @Entity(name = "document_signer")
 @Table(name = "document_signer")
+@NoArgsConstructor
+@AllArgsConstructor
+@Data
 public class DocumentSigner {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -26,4 +32,36 @@ public class DocumentSigner {
     private LocalDateTime assignedAt;
     private LocalDateTime signedAt;
     private String documentHash;
+
+    public UUID getId() {
+        return id;
+    }
+
+    public User getSigner() {
+        return signer;
+    }
+
+    public LocalDateTime getAssignedAt() {
+        return assignedAt;
+    }
+
+    public void setAssignedAt(LocalDateTime assignedAt) {
+        this.assignedAt = assignedAt;
+    }
+
+    public LocalDateTime getSignedAt() {
+        return signedAt;
+    }
+
+    public void setSignedAt(LocalDateTime signedAt) {
+        this.signedAt = signedAt;
+    }
+
+    public String getDocumentHash() {
+        return documentHash;
+    }
+
+    public void setDocumentHash(String documentHash) {
+        this.documentHash = documentHash;
+    }
 }
