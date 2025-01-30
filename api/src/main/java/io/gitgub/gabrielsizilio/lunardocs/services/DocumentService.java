@@ -36,7 +36,7 @@ public class DocumentService {
 //    CREATE
     @Transactional
     public UUID create(DocumentDTO data) throws IOException {
-        User owner = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Credential owner = (Credential) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         MultipartFile file = data.file();
 
@@ -55,7 +55,7 @@ public class DocumentService {
 
         fileUltils.uploadDocument(file, fileNameId);
 
-        Document document = new Document(fileId, owner, fileName,
+        Document document = new Document(fileId, owner.getUser(), fileName,
                 data.documentRequestDTO().description(), fileNameId, StatusDocument.valueOf(data.documentRequestDTO().statusDocument()));
 
         documentRepository.save(document);
@@ -107,6 +107,10 @@ public class DocumentService {
 
         documentRepository.delete(documentOptional.get());
         return true;
+    }
+
+    public void singDocument(UUID documentId) {
+
     }
 
     private DocumentResponseDTO convertToResponseDTO(Document document) {

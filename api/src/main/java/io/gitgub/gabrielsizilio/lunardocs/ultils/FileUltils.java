@@ -10,6 +10,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
 import java.util.UUID;
 @Component
 public class FileUltils {
@@ -50,7 +53,7 @@ public class FileUltils {
         }
     }
 
-    public Path findFileById(UUID id) {
+    public Path findFileById(UUID id) throws FileNotFoundException {
         File folder = new File(uploadDirectory);
         File[] listOfFiles = folder.listFiles();
 
@@ -61,7 +64,18 @@ public class FileUltils {
                 }
             }
         }
-        return null;
+        throw new FileNotFoundException("Document is not found with id: " + id);
     }
 
+    public String generateFileHash(UUID idDocument) throws IOException, NoSuchAlgorithmException {
+        Path filePath = findFileById(idDocument);
+        byte[] fileBytes = Files.readAllBytes(filePath);
+
+        MessageDigest digest = MessageDigest.getInstance("SHA-256");
+        byte[] hash = digest.digest(fileBytes);
+
+        System.out.println("HASH FILE: " + Base64.getEncoder().encodeToString(hash));
+
+        return Base64.getEncoder().encodeToString(hash);
+    }
 }

@@ -4,6 +4,7 @@ import io.gitgub.gabrielsizilio.lunardocs.domain.user.User;
 import jakarta.persistence.*;
 import org.springframework.data.annotation.CreatedDate;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -22,13 +23,7 @@ public class DocumentSigner {
     @JoinColumn(name = "document_id")
     private Document document;
 
-    @CreatedDate
     private LocalDateTime assignedAt;
-
-    @PreUpdate
-    protected void onUpdate() {
-        this.assignedAt = LocalDateTime.now();
-    }
-
-
+    private LocalDateTime signedAt;
+    private String documentHash;
 }
