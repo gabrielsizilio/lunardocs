@@ -6,6 +6,7 @@ import io.gitgub.gabrielsizilio.lunardocs.domain.document.DocumentSigner;
 import io.gitgub.gabrielsizilio.lunardocs.domain.document.StatusDocument;
 import io.gitgub.gabrielsizilio.lunardocs.domain.document.dto.*;
 import io.gitgub.gabrielsizilio.lunardocs.domain.user.User;
+import io.gitgub.gabrielsizilio.lunardocs.domain.user.dto.UserDTO;
 import io.gitgub.gabrielsizilio.lunardocs.domain.user.dto.UserResponseDTO;
 import io.gitgub.gabrielsizilio.lunardocs.repository.DocumentRepository;
 import io.gitgub.gabrielsizilio.lunardocs.repository.DocumentSignedRepository;
@@ -13,6 +14,7 @@ import io.gitgub.gabrielsizilio.lunardocs.ultils.FileUltils;
 import io.gitgub.gabrielsizilio.lunardocs.ultils.SecurityUtils;
 import io.gitgub.gabrielsizilio.lunardocs.ultils.UUIDUtils;
 import jakarta.transaction.Transactional;
+import org.springframework.boot.context.config.ConfigDataResourceNotFoundException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -121,6 +123,7 @@ public class DocumentService {
         return true;
     }
 
+    @Transactional
     public List<DocumentSignerDTO> getSignerByDocumentId(UUID documentId) {
         List<DocumentSigner> signers = documentSignedRepository.findByDocumentId(documentId)
                 .orElseThrow(() -> new IllegalArgumentException("Document not found with id " + documentId));
@@ -128,15 +131,26 @@ public class DocumentService {
             return signers.stream().map(this::convertToSignerDTO).collect(Collectors.toList());
     }
 
-    public void addSigner(UUID documentId, UUID userId) {
+    @Transactional
+    public UUID addSigner(UUID documentId, UUID userId) {
         try {
             Document document = findDocumentById(documentId);
-            User user = userService.findUserById(userId);
+            User signer = userService.findUserById(userId);
 
-            System.out.println(user.toString());
+            Optional<DocumentSigner> documentSignerOptional = documentSignedRepository.findByDocumentIdAndSignerId(documentId, userId);
 
+            if(documentSignerOptional.isPresent()) {
+                throw new IllegalArgumentException("User is already a signer this document");
+            }
+
+            DocumentSigner documentSigner = new DocumentSigner();
+            documentSigner.setDocument(document);
+            documentSigner.setSigner(signer);
+
+            documentSignedRepository.save(documentSigner);
+            return documentSigner.getId();
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new IllegalArgumentException("Error while adding signer", e);
         }
     }
 
@@ -152,7 +166,10 @@ public class DocumentService {
 
     private DocumentSignerDTO convertToSignerDTO(DocumentSigner documentSigner) {
         return new DocumentSignerDTO(documentSigner.getId(),
-                documentSigner.getSigner(),
+                new UserDTO(documentSigner.getSigner().getId(),
+                        documentSigner.getSigner().getFirstName(),
+                        documentSigner.getSigner().getLastName(),
+                        documentSigner.getSigner().getEmail()),
                 documentSigner.getAssignedAt(),
                 documentSigner.getSignedAt(),
                 documentSigner.getDocumentHash());

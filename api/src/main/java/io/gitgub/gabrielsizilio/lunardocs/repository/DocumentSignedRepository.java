@@ -9,4 +9,5 @@ import java.util.UUID;
 
 public interface DocumentSignedRepository extends JpaRepository<DocumentSigner, UUID> {
     Optional<List<DocumentSigner>> findByDocumentId(UUID documentId);
+    Optional<DocumentSigner> findByDocumentIdAndSignerId(UUID documentId, UUID signerId);
 }

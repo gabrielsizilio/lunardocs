@@ -64,4 +64,16 @@ public class DocumentSigner {
     public void setDocumentHash(String documentHash) {
         this.documentHash = documentHash;
     }
+
+    public void setSigner(User signer) {
+        this.signer = signer;
+    }
+
+    public Document getDocument() {
+        return document;
+    }
+
+    public void setDocument(Document document) {
+        this.document = document;
+    }
 }
