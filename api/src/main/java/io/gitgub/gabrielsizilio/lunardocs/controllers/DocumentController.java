@@ -63,10 +63,11 @@ public class DocumentController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @PostMapping("/{documentId}/signers/{signerId}")
-    public ResponseEntity<String> addSigner(@PathVariable UUID documentId, @PathVariable UUID signerId) {
-        documentService.addSigner(documentId, signerId);
-        return new ResponseEntity<>(HttpStatus.OK);
+    @PostMapping("/{documentId}/signers")
+    public ResponseEntity<DocumentResponseDTO> addSigner(@PathVariable UUID documentId, @RequestBody DocumentSignersRequestDTO documentSignersRequestDTO) throws IOException  {
+
+        DocumentResponseDTO documentResponseDTO = documentService.addSigner(documentId, documentSignersRequestDTO.signersIds());
+        return new ResponseEntity<>(documentResponseDTO, HttpStatus.OK);
     }
 
     @GetMapping("/{documentId}/signers")

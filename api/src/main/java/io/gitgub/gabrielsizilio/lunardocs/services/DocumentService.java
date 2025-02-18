@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -132,25 +133,30 @@ public class DocumentService {
     }
 
     @Transactional
-    public UUID addSigner(UUID documentId, UUID userId) {
+    public DocumentResponseDTO addSigner(UUID documentId, List<UUID> usersId) {
         try {
             Document document = findDocumentById(documentId);
-            User signer = userService.findUserById(userId);
 
-            Optional<DocumentSigner> documentSignerOptional = documentSignedRepository.findByDocumentIdAndSignerId(documentId, userId);
+            for(UUID signerId : usersId) {
+                User signer = userService.findUserById(signerId);
 
-            if(documentSignerOptional.isPresent()) {
-                throw new IllegalArgumentException("User is already a signer this document");
+                Optional<DocumentSigner> documentSignerOptional = documentSignedRepository.findByDocumentIdAndSignerId(documentId, signerId);
+
+                if(documentSignerOptional.isPresent()) {
+                    throw new IllegalArgumentException("User is already a signer this document");
+                }
+
+                DocumentSigner documentSigner = new DocumentSigner();
+                documentSigner.setDocument(document);
+                documentSigner.setSigner(signer);
+
+                documentSignedRepository.save(documentSigner);
             }
+            return convertToResponseDTO(document);
 
-            DocumentSigner documentSigner = new DocumentSigner();
-            documentSigner.setDocument(document);
-            documentSigner.setSigner(signer);
-
-            documentSignedRepository.save(documentSigner);
-            return documentSigner.getId();
-        } catch (Exception e) {
-            throw new IllegalArgumentException("Error while adding signer", e);
+        }
+        catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Error while adding signer: " + e.getMessage());
         }
     }
 
@@ -161,7 +167,12 @@ public class DocumentService {
     private DocumentResponseDTO convertToResponseDTO(Document document) {
         User owner = document.getOwner();
         UserResponseDTO ownerDto = new UserResponseDTO(owner.getId(), owner.getFirstName(), owner.getLastName(), owner.getEmail(), owner.getCpf(),owner.getRole().toString());
-        return new DocumentResponseDTO(document.getId(), ownerDto, document.getName(), document.getDescription(), document.getStatus().toString(), document.getCreatedAt(), document.getUpdatedAt());
+        List<UUID> signers = new ArrayList<>();
+        for(DocumentSigner documentSinger : document.getSigners()) {
+            signers.add(documentSinger.getSigner().getId());
+        }
+
+        return new DocumentResponseDTO(document.getId(), ownerDto, document.getName(), document.getDescription(), document.getStatus().toString(), document.getCreatedAt(), document.getUpdatedAt(), signers);
     }
 
     private DocumentSignerDTO convertToSignerDTO(DocumentSigner documentSigner) {
