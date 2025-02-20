@@ -70,6 +70,12 @@ public class DocumentController {
         return new ResponseEntity<>(documentResponseDTO, HttpStatus.OK);
     }
 
+    @DeleteMapping("/{documentId}/signers/{signerId}")
+    public ResponseEntity<DocumentResponseDTO> removeSigner(@PathVariable UUID documentId, @PathVariable UUID signerId) {
+        DocumentResponseDTO documentResponseDTO = documentService.removeSigner(documentId, signerId);
+        return new ResponseEntity<>(documentResponseDTO, HttpStatus.OK);
+    }
+
     @GetMapping("/{documentId}/signers")
     public ResponseEntity<DocumentSignerResponseDTO> getSigners(@PathVariable UUID documentId) {
         List<DocumentSignerDTO> signers = documentService.getSignerByDocumentId(documentId);

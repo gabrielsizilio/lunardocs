@@ -6,5 +6,5 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
-public record DocumentResponseDTO(UUID id, UserResponseDTO owner, String fileName, String fileDescription, String status, LocalDateTime createdAt, LocalDateTime updatedAt, List<UUID> signers) {
+public record DocumentResponseDTO(UUID id, UserResponseDTO owner, String fileName, String fileDescription, String status, List<UUID> signers) {
 }

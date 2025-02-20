@@ -13,6 +13,7 @@ import io.gitgub.gabrielsizilio.lunardocs.repository.DocumentSignedRepository;
 import io.gitgub.gabrielsizilio.lunardocs.ultils.FileUltils;
 import io.gitgub.gabrielsizilio.lunardocs.ultils.SecurityUtils;
 import io.gitgub.gabrielsizilio.lunardocs.ultils.UUIDUtils;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.boot.context.config.ConfigDataResourceNotFoundException;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -32,7 +33,7 @@ public class DocumentService {
     private final FileUltils fileUltils;
     private final UserService userService;
     private final DocumentSignedRepository documentSignedRepository;
-    DocumentRepository documentRepository;
+    private final DocumentRepository documentRepository;
 
     public DocumentService(DocumentRepository documentRepository, FileUltils fileUltils, UserService userService, DocumentSignedRepository documentSignedRepository) {
         this.documentRepository = documentRepository;
@@ -44,30 +45,35 @@ public class DocumentService {
 //    CREATE
     @Transactional
     public UUID create(DocumentDTO data) throws IOException {
-        Credential owner = (Credential) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        try {
 
-        MultipartFile file = data.file();
+            Credential owner = (Credential) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        if(file.isEmpty()) {
-            throw new IllegalArgumentException("File is empty or null");
+            MultipartFile file = data.file();
+
+            if(file.isEmpty()) {
+                throw new IllegalArgumentException("File is empty or null");
+            }
+
+            String fileName =  data.documentRequestDTO().name();
+
+            if(fileName == null || fileName.isEmpty()) {
+                fileName = file.getOriginalFilename();
+            }
+
+            Document document = new Document(owner.getUser(), fileName,
+                    data.documentRequestDTO().description(), StatusDocument.valueOf(data.documentRequestDTO().statusDocument()));
+
+            documentRepository.save(document);
+
+            String fileNameId = FileUltils.generateFileName(document.getId(), fileName);
+
+            fileUltils.uploadDocument(file, fileNameId);
+
+            return document.getId();
+        } catch (Exception e) {
+            throw new RuntimeException("Unexpected error while creating document: " + e.getMessage(), e);
         }
-
-        UUID fileId = UUIDUtils.generateUUIDRandom();
-        String fileName =  data.documentRequestDTO().name();
-
-        if(fileName == null || fileName.isEmpty()) {
-            fileName = file.getOriginalFilename();
-        }
-
-        String fileNameId = FileUltils.generateFileName(fileId, fileName);
-
-        fileUltils.uploadDocument(file, fileNameId);
-
-        Document document = new Document(fileId, owner.getUser(), fileName,
-                data.documentRequestDTO().description(), fileNameId, StatusDocument.valueOf(data.documentRequestDTO().statusDocument()));
-
-        documentRepository.save(document);
-        return document.getId();
     }
 
 //    READ
@@ -162,6 +168,22 @@ public class DocumentService {
         }
     }
 
+    public DocumentResponseDTO removeSigner(UUID documentId, UUID signerId) {
+        try {
+            Optional<DocumentSigner> documentSignerOptional = documentSignedRepository.findByDocumentIdAndSignerId(documentId, signerId);
+
+            if(documentSignerOptional.isEmpty()) {
+                throw new IllegalArgumentException("User not a signer of this document ");
+            }
+
+            documentSignedRepository.delete(documentSignerOptional.get());
+
+            return convertToResponseDTO(documentSignerOptional.get().getDocument());
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Error while removing signer: " + e.getMessage());
+        }
+    }
+
     public void singDocument(UUID documentId) {
 
     }
@@ -174,7 +196,7 @@ public class DocumentService {
             signers.add(documentSinger.getSigner().getId());
         }
 
-        return new DocumentResponseDTO(document.getId(), ownerDto, document.getName(), document.getDescription(), document.getStatus().toString(), document.getCreatedAt(), document.getUpdatedAt(), signers);
+        return new DocumentResponseDTO(document.getId(), ownerDto, document.getName(), document.getDescription(), document.getStatus().toString(), signers);
     }
 
     private DocumentSignerDTO convertToSignerDTO(DocumentSigner documentSigner) {

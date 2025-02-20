@@ -3,8 +3,6 @@ package io.gitgub.gabrielsizilio.lunardocs.domain.document;
 import io.gitgub.gabrielsizilio.lunardocs.domain.user.User;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -24,41 +22,27 @@ public class Document {
     private User owner;
     private String name;
     private String description;
-    private String url;
     private StatusDocument status;
 
     @OneToMany(mappedBy = "document", cascade = CascadeType.ALL)
     private List<DocumentSigner> signers;
 
-    @CreatedDate
-    @Column(name = "created_at", nullable = false, updatable = false)
-    private LocalDateTime createdAt;
-    @LastModifiedDate
-    @Column(name = "updated_at", nullable = false)
-    private LocalDateTime updatedAt;
-
-    @PrePersist
-    protected void onCreate() {
-        this.createdAt = LocalDateTime.now();
-        onUpdate();
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        this.updatedAt = LocalDateTime.now();
-    }
-
     public Document() {
     }
 
-    public Document(UUID id, User owner, String name, String description, String url, StatusDocument status) {
+    public Document(UUID id, User owner, String name, String description,StatusDocument status) {
         this.id = id;
         this.owner = owner;
         this.name = name;
         this.description = description;
-        this.url = url;
         this.status = status;
-        onCreate();
+    }
+
+    public Document(User owner, String name, String description,StatusDocument status) {
+        this.owner = owner;
+        this.name = name;
+        this.description = description;
+        this.status = status;
     }
 
     public List<DocumentSigner> getSigners() {
@@ -67,14 +51,6 @@ public class Document {
 
     public void setSigners(List<DocumentSigner> signers) {
         this.signers = signers;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
     }
 
     public UUID getId() {
@@ -117,22 +93,6 @@ public class Document {
         this.status = status;
     }
 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
     @Override
     public String toString() {
         return "Document{" +
@@ -140,10 +100,7 @@ public class Document {
                 ", owner=" + owner +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
-                ", url='" + url + '\'' +
                 ", status=" + status +
-                ", createdAt=" + createdAt +
-                ", updatedAt=" + updatedAt +
                 '}';
     }
 }
