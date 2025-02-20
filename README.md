@@ -19,6 +19,8 @@ O LunarDocs é uma API de **gerenciamento de documentos digitais** permitindo qu
 - 📑 **Histórico de Ações**: Permite registrar e visualizar alterações feitas nos documentos. _(🔜 em breve)_
 
 ## 📡 Endpoints principais 
+``` Disponibilizei o arquivo lunarDocs_endpoint.json, que serve para importação de um ambiente no insomnia para testar```
+
 #### 🔑 Autenticação
 Estou atualizando os endpoints para seguirem o padrão **RESTful**.
 
