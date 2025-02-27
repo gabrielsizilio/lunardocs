@@ -4,7 +4,6 @@ import io.gitgub.gabrielsizilio.lunardocs.domain.user.User;
 import io.gitgub.gabrielsizilio.lunardocs.domain.user.UserRole;
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,7 +16,6 @@ import java.util.UUID;
 @Entity(name = "credentials")
 @Table(name="credentials")
 @Data
-@EqualsAndHashCode(of = "id")
 public class Credential implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -75,35 +73,7 @@ public class Credential implements UserDetails {
         return true;
     }
 
-    public UUID getId() {
-        return id;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
     public String setPassword(String password) {
         return new BCryptPasswordEncoder().encode(password);
-    }
-
-    public String getResetToken() {
-        return resetToken;
-    }
-
-    public void setResetToken(String resetToken) {
-        this.resetToken = resetToken;
     }
 }

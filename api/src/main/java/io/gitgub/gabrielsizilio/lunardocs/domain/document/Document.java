@@ -2,9 +2,9 @@ package io.gitgub.gabrielsizilio.lunardocs.domain.document;
 
 import io.gitgub.gabrielsizilio.lunardocs.domain.user.User;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
