@@ -127,8 +127,12 @@ public class DocumentService {
             throw new IllegalArgumentException("Document not found with id " + documentId);
         }
 
-        documentRepository.delete(documentOptional.get());
-        return true;
+        if(fileUltils.deleteFile(documentId, documentOptional.get().getName())) {
+            documentRepository.deleteById(documentId);
+            return true;
+        } else {
+            throw new RuntimeException("Could not delete document");
+        }
     }
 
     @Transactional

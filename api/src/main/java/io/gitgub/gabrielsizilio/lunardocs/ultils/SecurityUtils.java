@@ -10,7 +10,7 @@ public class SecurityUtils {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         if (principal instanceof Credential) {
-            return ((Credential) principal).getId();
+            return ((Credential) principal).getUser().getId();
         } else {
             return null;
         }

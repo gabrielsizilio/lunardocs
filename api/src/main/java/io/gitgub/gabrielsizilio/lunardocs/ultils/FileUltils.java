@@ -17,7 +17,7 @@ import java.util.UUID;
 @Component
 public class FileUltils {
 
-    @Value("${upload.document.directory}")
+    @Value("${upload.document.directory.absolute}")
     private String uploadDirectory;
 
     private void ensureDirectoryExists() {
@@ -50,6 +50,22 @@ public class FileUltils {
             return newPath.toString();
         } else {
             throw new FileNotFoundException("File not found with id: " + idDocument);
+        }
+    }
+
+    public Boolean deleteFile(UUID idDocument, String fileName) {
+        try {
+            Path pathExist = Paths.get(uploadDirectory, generateFileName(idDocument, fileName));
+
+            File file = pathExist.toFile();
+            if (file.exists()) {
+                Files.deleteIfExists(pathExist);
+                return true;
+            }
+            return false;
+
+        } catch (Exception e) {
+            throw new RuntimeException("Error while deleting file: " + fileName, e);
         }
     }
 
