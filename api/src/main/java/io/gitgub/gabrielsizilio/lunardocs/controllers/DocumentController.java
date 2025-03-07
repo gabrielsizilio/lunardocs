@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("document")
+@RequestMapping("documents")
 public class DocumentController {
 
     private final DocumentService documentService;
@@ -21,7 +21,7 @@ public class DocumentController {
         this.documentService = documentService;
     }
 
-    @PostMapping("upload")
+    @PostMapping("")
     public ResponseEntity<String> uploadDocument(@RequestParam("file") MultipartFile file,
                                                  @RequestParam(value = "name", required = false) String name,
                                                  @RequestParam(value = "description", required = false) String description,
@@ -37,27 +37,27 @@ public class DocumentController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @GetMapping("findAll")
+    @GetMapping("")
     public ResponseEntity<List<DocumentResponseDTO>> findAllDocuments() {
         List<DocumentResponseDTO> documents = documentService.findAllDocuments();
 
         return new ResponseEntity<>(documents, HttpStatus.OK);
     }
 
-    @GetMapping("myDocuments")
+    @GetMapping("mine")
     public ResponseEntity<List<DocumentResponseDTO>> findMyDocuments() {
         List<DocumentResponseDTO> documents = documentService.findMyDocuments();
         return new ResponseEntity<>(documents, HttpStatus.OK);
     }
 
-    @PutMapping("update/{id}")
+    @PutMapping("{id}")
     public ResponseEntity<DocumentResponseDTO> updateDocument(@PathVariable UUID id, @RequestBody DocumentRequestDTO documentRequestDTO) throws IOException {
         DocumentResponseDTO documentResponseDTO = documentService.update(id, documentRequestDTO);
 
         return new ResponseEntity<>(documentResponseDTO, HttpStatus.OK);
     }
 
-    @DeleteMapping("delete/{id}")
+    @DeleteMapping("{id}")
     public ResponseEntity<String> deleteDocument(@PathVariable UUID id) {
         documentService.deleteDocument(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
