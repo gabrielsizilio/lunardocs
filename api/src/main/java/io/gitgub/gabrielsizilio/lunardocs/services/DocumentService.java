@@ -64,11 +64,10 @@ public class DocumentService {
             Document document = new Document(owner.getUser(), fileName,
                     data.documentRequestDTO().description(), StatusDocument.valueOf(data.documentRequestDTO().statusDocument()));
 
-            documentRepository.save(document);
+            document = documentRepository.save(document);
+            System.out.println(">>> " + document.getId());
 
-            String fileNameId = FileUltils.generateFileName(document.getId(), fileName);
-
-            fileUltils.uploadDocument(file, fileNameId);
+            fileUltils.uploadDocument(file, document.getId());
 
             return document.getId();
         } catch (Exception e) {
@@ -127,7 +126,7 @@ public class DocumentService {
             throw new IllegalArgumentException("Document not found with id " + documentId);
         }
 
-        if(fileUltils.deleteFile(documentId, documentOptional.get().getName())) {
+        if(fileUltils.deleteFile(documentId)){
             documentRepository.deleteById(documentId);
             return true;
         } else {

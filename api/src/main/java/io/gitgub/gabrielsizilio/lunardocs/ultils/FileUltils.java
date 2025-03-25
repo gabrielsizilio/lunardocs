@@ -27,16 +27,40 @@ public class FileUltils {
         }
     }
 
+    private String getNextVersionFileName(Path documentFolder, String originalFileName) {
+        String extension = "";
+        int dotIndex = uploadDirectory.lastIndexOf('.');
+        if (dotIndex > 0) {
+            extension = originalFileName.substring(dotIndex);
+        }
+
+        String baseName = "document_V";
+
+        int version = 1;
+        while (Files.exists(documentFolder.resolve(baseName + version + extension))) {
+            version++;
+        }
+
+        return baseName + version + extension;
+    }
+
     public static String generateFileName(UUID id, String fileName) {
         return id + "_" + fileName;
     }
 
-    public String uploadDocument(MultipartFile file, String fileNameId) throws IOException {
+    public String uploadDocument(MultipartFile file, UUID documentId) throws IOException {
         ensureDirectoryExists();
-        Path path = Paths.get(uploadDirectory, fileNameId);
 
-        Files.copy(file.getInputStream(), path);
-        return path.toString();
+        Path documentFolder = Paths.get(uploadDirectory, documentId.toString());
+        if(!Files.exists(documentFolder)) {
+            Files.createDirectories(documentFolder);
+        }
+        String fileName = getNextVersionFileName(documentFolder, file.getOriginalFilename());
+
+        Path filePath = documentFolder.resolve(fileName);
+
+        Files.copy(file.getInputStream(), filePath);
+        return filePath.toString();
     }
 
     public String updateFileName(String newName, UUID idDocument) throws IOException {
@@ -53,19 +77,28 @@ public class FileUltils {
         }
     }
 
-    public Boolean deleteFile(UUID idDocument, String fileName) {
+    public Boolean deleteFile(UUID idDocument) {
         try {
-            Path pathExist = Paths.get(uploadDirectory, generateFileName(idDocument, fileName));
+            Path documentFolder = Paths.get(uploadDirectory, idDocument.toString());
+            File folder = documentFolder.toFile();
 
-            File file = pathExist.toFile();
-            if (file.exists()) {
-                Files.deleteIfExists(pathExist);
-                return true;
+            if (documentFolder.toFile().exists()) {
+                File files[] = folder.listFiles();
+
+                for(File file : files) {
+                    file.delete();
+                }
+
+                if(folder.delete()) {
+                    return true;
+                } else {
+                    return false;
+                }
             }
             return false;
 
         } catch (Exception e) {
-            throw new RuntimeException("Error while deleting file: " + fileName, e);
+            throw new RuntimeException("Error while deleting file: " + e);
         }
     }
 
