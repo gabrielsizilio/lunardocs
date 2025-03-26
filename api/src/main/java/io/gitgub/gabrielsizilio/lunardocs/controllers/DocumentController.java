@@ -2,7 +2,11 @@ package io.gitgub.gabrielsizilio.lunardocs.controllers;
 
 import io.gitgub.gabrielsizilio.lunardocs.domain.document.dto.*;
 import io.gitgub.gabrielsizilio.lunardocs.services.DocumentService;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -61,6 +65,20 @@ public class DocumentController {
     public ResponseEntity<String> deleteDocument(@PathVariable UUID id) {
         documentService.deleteDocument(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @GetMapping("/{id}/download")
+    public ResponseEntity<Resource> downloadDocument(@PathVariable UUID id, @RequestParam String version) throws IOException {
+         FileSystemResource fileSystemResource = documentService.downloadDocument(id, version);
+
+         if(fileSystemResource !=null) {
+             return ResponseEntity.ok()
+                     .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + fileSystemResource.getFilename())
+                     .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                     .body(fileSystemResource);
+         } else {
+             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+         }
     }
 
     @PostMapping("/{documentId}/signers")

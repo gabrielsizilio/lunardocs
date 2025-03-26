@@ -16,11 +16,15 @@ import io.gitgub.gabrielsizilio.lunardocs.ultils.UUIDUtils;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.boot.context.config.ConfigDataResourceNotFoundException;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -131,6 +135,19 @@ public class DocumentService {
             return true;
         } else {
             throw new RuntimeException("Could not delete document");
+        }
+    }
+
+    public FileSystemResource downloadDocument(UUID documentId, String version) throws IOException {
+        Optional<Document> documentOptional = documentRepository.findById(documentId);
+        Path filePath = fileUltils.getDocumentPath(documentId, documentOptional.get().getName(), Integer.parseInt(version));
+        if(filePath != null) {
+            File file = filePath.toFile();
+
+            FileSystemResource fileSystemResource = new FileSystemResource(file);
+            return fileSystemResource;
+        } else {
+            throw new RuntimeException("File not found");
         }
     }
 

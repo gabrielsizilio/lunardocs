@@ -19,6 +19,7 @@ public class FileUltils {
 
     @Value("${upload.document.directory.absolute}")
     private String uploadDirectory;
+    private String baseNameDocument = "document_V";
 
     private void ensureDirectoryExists() {
         File file = new File(uploadDirectory);
@@ -34,14 +35,12 @@ public class FileUltils {
             extension = originalFileName.substring(dotIndex);
         }
 
-        String baseName = "document_V";
-
         int version = 1;
-        while (Files.exists(documentFolder.resolve(baseName + version + extension))) {
+        while (Files.exists(documentFolder.resolve(baseNameDocument + version + extension))) {
             version++;
         }
 
-        return baseName + version + extension;
+        return baseNameDocument + version + extension;
     }
 
     public static String generateFileName(UUID id, String fileName) {
@@ -114,6 +113,24 @@ public class FileUltils {
             }
         }
         throw new FileNotFoundException("Document is not found with id: " + id);
+    }
+
+    public Path getDocumentDirectory(UUID idDocument, String fileName) {
+        Path directory = Paths.get(uploadDirectory, idDocument.toString() + "_" + fileName);
+        return directory;
+    }
+
+    public Path getDocumentPath(UUID idDocument, String fileName, Integer version) {
+        try {
+            Path documentDirectory = getDocumentDirectory(idDocument, fileName);
+
+            if(documentDirectory != null) {
+                return Paths.get(documentDirectory.toString(), "document_V" + version);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Error while getting document path: " + e);
+        }
+        return null;
     }
 
     public String generateFileHash(UUID idDocument) throws IOException, NoSuchAlgorithmException {
