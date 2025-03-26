@@ -29,6 +29,8 @@ Estou atualizando os endpoints para seguirem o padrão **RESTful**.
 | POST   | `/auth/register` | Cria um novo usuário |
 | POST   | `/auth/login`    | Realiza login e retorna o token JWT |
 
+```!> A requisção LOGIN retornará um token para ser utilizado nas requisições, basta copiar o token (sem as áspas) e colar em uma variável de ambiente chamda *user_tk* para endpoints que exigem autenticação.```
+
 ---
 
 #### 📂 Gerenciamento de documentos
