@@ -139,8 +139,7 @@ public class DocumentService {
     }
 
     public FileSystemResource downloadDocument(UUID documentId, String version) throws IOException {
-        Optional<Document> documentOptional = documentRepository.findById(documentId);
-        Path filePath = fileUltils.getDocumentPath(documentId, documentOptional.get().getName(), Integer.parseInt(version));
+        Path filePath = fileUltils.getDocumentPath(documentId, Integer.parseInt(version));
         if(filePath != null) {
             File file = filePath.toFile();
 

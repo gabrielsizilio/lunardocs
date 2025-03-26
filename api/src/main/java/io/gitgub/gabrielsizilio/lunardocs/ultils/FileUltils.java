@@ -13,7 +13,10 @@ import java.nio.file.Paths;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
+import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Stream;
+
 @Component
 public class FileUltils {
 
@@ -44,7 +47,9 @@ public class FileUltils {
     }
 
     public static String generateFileName(UUID id, String fileName) {
-        return id + "_" + fileName;
+        String sanitizedName = fileName.trim().replaceAll("\\s+", "-");
+        System.out.println(">> " + sanitizedName);
+        return id + "_" + sanitizedName;
     }
 
     public String uploadDocument(MultipartFile file, UUID documentId) throws IOException {
@@ -65,7 +70,7 @@ public class FileUltils {
     public String updateFileName(String newName, UUID idDocument) throws IOException {
         ensureDirectoryExists();
 
-        Path existPath = findFileById(idDocument);
+        Path existPath = getDocumentDirectory(idDocument);
         if(Files.exists(existPath)) {
             Path newPath = Paths.get(uploadDirectory, generateFileName(idDocument, newName));
             Files.move(existPath, newPath);
@@ -78,7 +83,7 @@ public class FileUltils {
 
     public Boolean deleteFile(UUID idDocument) {
         try {
-            Path documentFolder = Paths.get(uploadDirectory, idDocument.toString());
+            Path documentFolder = getDocumentDirectory(idDocument);
             File folder = documentFolder.toFile();
 
             if (documentFolder.toFile().exists()) {
@@ -101,40 +106,33 @@ public class FileUltils {
         }
     }
 
-    public Path findFileById(UUID id) throws FileNotFoundException {
-        File folder = new File(uploadDirectory);
-        File[] listOfFiles = folder.listFiles();
+    public Path getDocumentDirectory(UUID idDocument) throws IOException {
+        try (Stream<Path> paths = Files.list(Paths.get(uploadDirectory))) {
+            Optional<Path> directory = paths
+                    .filter(Files::isDirectory)
+                    .filter(path -> path.getFileName().toString().startsWith(idDocument.toString()))
+                    .findFirst();
 
-        if(listOfFiles != null) {
-            for (File file : listOfFiles) {
-                if (file.getName().startsWith(id.toString())) {
-                    return file.toPath();
-                }
+            if (directory.isPresent()) {
+                return directory.get();
+            } else {
+                throw new FileNotFoundException("Directory for document " + idDocument + " not found.");
             }
         }
-        throw new FileNotFoundException("Document is not found with id: " + id);
     }
 
-    public Path getDocumentDirectory(UUID idDocument, String fileName) {
-        Path directory = Paths.get(uploadDirectory, idDocument.toString() + "_" + fileName);
-        return directory;
-    }
-
-    public Path getDocumentPath(UUID idDocument, String fileName, Integer version) {
+    public Path getDocumentPath(UUID idDocument, Integer version) {
         try {
-            Path documentDirectory = getDocumentDirectory(idDocument, fileName);
+            Path documentDirectory = getDocumentDirectory(idDocument);
 
-            if(documentDirectory != null) {
-                return Paths.get(documentDirectory.toString(), "document_V" + version);
-            }
+            return Paths.get(documentDirectory.toString(), "document_V" + version);
         } catch (Exception e) {
             throw new RuntimeException("Error while getting document path: " + e);
         }
-        return null;
     }
 
     public String generateFileHash(UUID idDocument) throws IOException, NoSuchAlgorithmException {
-        Path filePath = findFileById(idDocument);
+        Path filePath = getDocumentDirectory(idDocument);
         byte[] fileBytes = Files.readAllBytes(filePath);
 
         MessageDigest digest = MessageDigest.getInstance("SHA-256");
