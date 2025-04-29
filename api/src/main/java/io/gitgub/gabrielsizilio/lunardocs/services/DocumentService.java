@@ -215,8 +215,10 @@ public class DocumentService {
         User owner = document.getOwner();
         UserResponseDTO ownerDto = new UserResponseDTO(owner.getId(), owner.getFirstName(), owner.getLastName(), owner.getEmail(), owner.getCpf(),owner.getRole().toString());
         List<UUID> signers = new ArrayList<>();
-        for(DocumentSigner documentSinger : document.getSigners()) {
-            signers.add(documentSinger.getSigner().getId());
+        if(document.getSigners() != null) {
+            for(DocumentSigner documentSinger : document.getSigners()) {
+                signers.add(documentSinger.getSigner().getId());
+            }
         }
 
         return new DocumentResponseDTO(document.getId(), ownerDto, document.getName(), document.getDescription(), document.getStatus().toString(), signers);

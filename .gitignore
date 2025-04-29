@@ -36,5 +36,4 @@ build/
 /src/main/resources/application.properties
 
 ### upload documents ###
-
-/uploadDocument/
+/documents/
