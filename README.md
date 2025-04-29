@@ -1,12 +1,14 @@
 # LunarDocs 🚀
+
+<p align="center">
+  <img src="assets/lunar-docs.png" alt="LunarDocs Logo" width="200"/>
+</p>
+
 ![Java](https://img.shields.io/badge/Java-17-blue)
 ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.0-green)
 ![Status](https://img.shields.io/badge/api-Em%20Desenvolvimento-yellow)
 
 ![JWT](http://jwt.io/img/badge-compatible.svg)
-
-
-
 
 O LunarDocs é uma API de **gerenciamento de documentos digitais** permitindo que usuários façam login, upload de documentos, definam signatários e gerenciem o fluxo de assinaturas com segurança e eficiência de arquivos digitais. Está sendo desenvolvida em linguagem Java, utilizando o framework Spring.
 
