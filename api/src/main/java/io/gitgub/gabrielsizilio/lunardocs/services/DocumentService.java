@@ -71,6 +71,10 @@ public class DocumentService {
             document = documentRepository.save(document);
             System.out.println(">>> " + document.getId());
 
+            List<UUID> signers = new ArrayList<>();
+            signers.add(owner.getUser().getId());
+            addSigner(document.getId(), signers);
+
             fileUltils.uploadDocument(file, document.getId());
 
             return document.getId();
