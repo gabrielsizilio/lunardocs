@@ -1,8 +1,7 @@
-package io.gitgub.gabrielsizilio.lunardocs.domain.document.dto;
+package io.gitgub.gabrielsizilio.lunardocs.dto.documentDto;
 
-import io.gitgub.gabrielsizilio.lunardocs.domain.user.dto.UserResponseDTO;
+import io.gitgub.gabrielsizilio.lunardocs.dto.userDto.UserResponseDTO;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 

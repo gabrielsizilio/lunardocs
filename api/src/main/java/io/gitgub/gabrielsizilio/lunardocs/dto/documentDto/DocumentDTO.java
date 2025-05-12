@@ -1,4 +1,4 @@
-package io.gitgub.gabrielsizilio.lunardocs.domain.document.dto;
+package io.gitgub.gabrielsizilio.lunardocs.dto.documentDto;
 
 import org.springframework.web.multipart.MultipartFile;
 

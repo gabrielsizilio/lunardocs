@@ -1,4 +1,4 @@
-package io.gitgub.gabrielsizilio.lunardocs.domain.document.dto;
+package io.gitgub.gabrielsizilio.lunardocs.dto.documentDto;
 
 import java.util.List;
 import java.util.UUID;
