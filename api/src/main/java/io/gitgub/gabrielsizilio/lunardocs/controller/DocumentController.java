@@ -69,16 +69,15 @@ public class DocumentController {
 
     @GetMapping("/{id}/download")
     public ResponseEntity<Resource> downloadDocument(@PathVariable UUID id, @RequestParam String version) throws IOException {
-         FileSystemResource fileSystemResource = documentService.downloadDocument(id, version);
+         DocumentResponseDownloadDTO documentResponseDownloadDTO = documentService.downloadDocument(id, version);
 
-         if(fileSystemResource !=null) {
-             return ResponseEntity.ok()
-                     .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + fileSystemResource.getFilename())
-                     .contentType(MediaType.APPLICATION_OCTET_STREAM)
-                     .body(fileSystemResource);
-         } else {
-             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-         }
+         FileSystemResource fileSystemResource = documentResponseDownloadDTO.fileSystemResource();
+         String fileName = documentResponseDownloadDTO.fileName();
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + fileName)
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .body(fileSystemResource);
     }
 
     @PostMapping("/{documentId}/signers")

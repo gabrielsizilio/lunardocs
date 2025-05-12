@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
@@ -138,13 +139,20 @@ public class DocumentService {
         }
     }
 
-    public FileSystemResource downloadDocument(UUID documentId, String version) throws IOException {
+    public DocumentResponseDownloadDTO downloadDocument(UUID documentId, String version) throws IOException {
         Path filePath = fileUltils.getDocumentPath(documentId, Integer.parseInt(version));
+
+        Optional<Document> documentOptional = documentRepository.findById(documentId);
+        if(documentOptional.isEmpty()) {
+            throw new FileNotFoundException("Document not found with id " + documentId);
+        }
+
         if(filePath != null) {
             File file = filePath.toFile();
 
             FileSystemResource fileSystemResource = new FileSystemResource(file);
-            return fileSystemResource;
+
+            return new DocumentResponseDownloadDTO(documentOptional.get().getName(), fileSystemResource);
         } else {
             throw new RuntimeException("File not found");
         }
