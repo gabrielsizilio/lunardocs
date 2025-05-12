@@ -1,4 +1,4 @@
-package io.gitgub.gabrielsizilio.lunardocs.services;
+package io.gitgub.gabrielsizilio.lunardocs.service;
 
 import io.gitgub.gabrielsizilio.lunardocs.exception.customException.UserNotFoundException;
 import io.gitgub.gabrielsizilio.lunardocs.repository.UserDetailRepository;

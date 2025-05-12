@@ -1,4 +1,4 @@
-package io.gitgub.gabrielsizilio.lunardocs.controllers;
+package io.gitgub.gabrielsizilio.lunardocs.controller;
 
 import io.gitgub.gabrielsizilio.lunardocs.domain.helloWorld.dto.HelloWorldRequestDTO;
 import io.gitgub.gabrielsizilio.lunardocs.domain.helloWorld.dto.HelloWorldResponseDTO;

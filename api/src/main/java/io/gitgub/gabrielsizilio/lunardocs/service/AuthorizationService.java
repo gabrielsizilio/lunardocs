@@ -1,4 +1,4 @@
-package io.gitgub.gabrielsizilio.lunardocs.services;
+package io.gitgub.gabrielsizilio.lunardocs.service;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

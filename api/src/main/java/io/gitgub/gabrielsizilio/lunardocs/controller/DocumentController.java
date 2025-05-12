@@ -1,7 +1,7 @@
-package io.gitgub.gabrielsizilio.lunardocs.controllers;
+package io.gitgub.gabrielsizilio.lunardocs.controller;
 
-import io.gitgub.gabrielsizilio.lunardocs.domain.document.dto.*;
-import io.gitgub.gabrielsizilio.lunardocs.services.DocumentService;
+import io.gitgub.gabrielsizilio.lunardocs.dto.documentDto.*;
+import io.gitgub.gabrielsizilio.lunardocs.service.DocumentService;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;

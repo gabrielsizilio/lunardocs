@@ -1,9 +1,9 @@
-package io.gitgub.gabrielsizilio.lunardocs.services;
+package io.gitgub.gabrielsizilio.lunardocs.service;
 
-import io.gitgub.gabrielsizilio.lunardocs.domain.credential.dto.CredentialRequestDTO;
-import io.gitgub.gabrielsizilio.lunardocs.domain.credential.dto.CredentialResponseDTO;
-import io.gitgub.gabrielsizilio.lunardocs.domain.user.dto.UserRequestDTO;
-import io.gitgub.gabrielsizilio.lunardocs.domain.user.dto.UserResponseDTO;
+import io.gitgub.gabrielsizilio.lunardocs.dto.credentialDto.CredentialRequestDTO;
+import io.gitgub.gabrielsizilio.lunardocs.dto.credentialDto.CredentialResponseDTO;
+import io.gitgub.gabrielsizilio.lunardocs.dto.userDto.UserRequestDTO;
+import io.gitgub.gabrielsizilio.lunardocs.dto.userDto.UserResponseDTO;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 

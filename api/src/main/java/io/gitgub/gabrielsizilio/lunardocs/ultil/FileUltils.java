@@ -1,4 +1,4 @@
-package io.gitgub.gabrielsizilio.lunardocs.ultils;
+package io.gitgub.gabrielsizilio.lunardocs.ultil;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;

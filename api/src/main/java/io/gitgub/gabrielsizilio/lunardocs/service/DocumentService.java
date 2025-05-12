@@ -1,21 +1,18 @@
-package io.gitgub.gabrielsizilio.lunardocs.services;
+package io.gitgub.gabrielsizilio.lunardocs.service;
 
 import io.gitgub.gabrielsizilio.lunardocs.domain.credential.Credential;
 import io.gitgub.gabrielsizilio.lunardocs.domain.document.Document;
 import io.gitgub.gabrielsizilio.lunardocs.domain.document.DocumentSigner;
 import io.gitgub.gabrielsizilio.lunardocs.domain.document.StatusDocument;
-import io.gitgub.gabrielsizilio.lunardocs.domain.document.dto.*;
+import io.gitgub.gabrielsizilio.lunardocs.dto.documentDto.*;
 import io.gitgub.gabrielsizilio.lunardocs.domain.user.User;
-import io.gitgub.gabrielsizilio.lunardocs.domain.user.dto.UserDTO;
-import io.gitgub.gabrielsizilio.lunardocs.domain.user.dto.UserResponseDTO;
+import io.gitgub.gabrielsizilio.lunardocs.dto.userDto.UserDTO;
+import io.gitgub.gabrielsizilio.lunardocs.dto.userDto.UserResponseDTO;
 import io.gitgub.gabrielsizilio.lunardocs.repository.DocumentRepository;
 import io.gitgub.gabrielsizilio.lunardocs.repository.DocumentSignedRepository;
-import io.gitgub.gabrielsizilio.lunardocs.ultils.FileUltils;
-import io.gitgub.gabrielsizilio.lunardocs.ultils.SecurityUtils;
-import io.gitgub.gabrielsizilio.lunardocs.ultils.UUIDUtils;
-import jakarta.persistence.EntityNotFoundException;
+import io.gitgub.gabrielsizilio.lunardocs.ultil.FileUltils;
+import io.gitgub.gabrielsizilio.lunardocs.ultil.SecurityUtils;
 import jakarta.transaction.Transactional;
-import org.springframework.boot.context.config.ConfigDataResourceNotFoundException;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -23,7 +20,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.util.ArrayList;

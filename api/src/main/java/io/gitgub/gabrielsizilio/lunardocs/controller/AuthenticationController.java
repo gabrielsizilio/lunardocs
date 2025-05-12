@@ -1,13 +1,12 @@
-package io.gitgub.gabrielsizilio.lunardocs.controllers;
+package io.gitgub.gabrielsizilio.lunardocs.controller;
 
-import io.gitgub.gabrielsizilio.lunardocs.controllers.authentication.dto.AuthenticationRequestDTO;
-import io.gitgub.gabrielsizilio.lunardocs.controllers.authentication.dto.AuthenticationResponseDTO;
+import io.gitgub.gabrielsizilio.lunardocs.dto.authenticationDto.AuthenticationRequestDTO;
+import io.gitgub.gabrielsizilio.lunardocs.dto.authenticationDto.AuthenticationResponseDTO;
 import io.gitgub.gabrielsizilio.lunardocs.domain.credential.Credential;
-import io.gitgub.gabrielsizilio.lunardocs.domain.user.dto.UserRequestDTO;
-import io.gitgub.gabrielsizilio.lunardocs.domain.user.dto.UserResponseDTO;
+import io.gitgub.gabrielsizilio.lunardocs.dto.userDto.UserRequestDTO;
+import io.gitgub.gabrielsizilio.lunardocs.dto.userDto.UserResponseDTO;
 import io.gitgub.gabrielsizilio.lunardocs.infra.security.TokenService;
-import io.gitgub.gabrielsizilio.lunardocs.services.UserCredentialService;
-import io.gitgub.gabrielsizilio.lunardocs.services.UserService;
+import io.gitgub.gabrielsizilio.lunardocs.service.UserCredentialService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;

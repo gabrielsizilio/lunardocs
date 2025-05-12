@@ -1,9 +1,9 @@
-package io.gitgub.gabrielsizilio.lunardocs.services;
+package io.gitgub.gabrielsizilio.lunardocs.service;
 
 import io.gitgub.gabrielsizilio.lunardocs.domain.user.User;
 import io.gitgub.gabrielsizilio.lunardocs.domain.user.UserRole;
-import io.gitgub.gabrielsizilio.lunardocs.domain.user.dto.UserRequestDTO;
-import io.gitgub.gabrielsizilio.lunardocs.domain.user.dto.UserResponseDTO;
+import io.gitgub.gabrielsizilio.lunardocs.dto.userDto.UserRequestDTO;
+import io.gitgub.gabrielsizilio.lunardocs.dto.userDto.UserResponseDTO;
 import io.gitgub.gabrielsizilio.lunardocs.exception.customException.ConflictException;
 import io.gitgub.gabrielsizilio.lunardocs.exception.customException.UserNotFoundException;
 import io.gitgub.gabrielsizilio.lunardocs.repository.UserRepository;

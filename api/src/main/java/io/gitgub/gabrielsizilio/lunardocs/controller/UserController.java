@@ -1,8 +1,8 @@
-package io.gitgub.gabrielsizilio.lunardocs.controllers;
+package io.gitgub.gabrielsizilio.lunardocs.controller;
 
-import io.gitgub.gabrielsizilio.lunardocs.domain.user.dto.UserRequestDTO;
-import io.gitgub.gabrielsizilio.lunardocs.domain.user.dto.UserResponseDTO;
-import io.gitgub.gabrielsizilio.lunardocs.services.UserService;
+import io.gitgub.gabrielsizilio.lunardocs.dto.userDto.UserRequestDTO;
+import io.gitgub.gabrielsizilio.lunardocs.dto.userDto.UserResponseDTO;
+import io.gitgub.gabrielsizilio.lunardocs.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;

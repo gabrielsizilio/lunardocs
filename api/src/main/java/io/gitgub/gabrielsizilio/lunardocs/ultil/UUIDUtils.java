@@ -1,4 +1,4 @@
-package io.gitgub.gabrielsizilio.lunardocs.ultils;
+package io.gitgub.gabrielsizilio.lunardocs.ultil;
 
 import java.util.UUID;
 

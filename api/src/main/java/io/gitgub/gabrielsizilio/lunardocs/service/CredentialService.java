@@ -1,8 +1,8 @@
-package io.gitgub.gabrielsizilio.lunardocs.services;
+package io.gitgub.gabrielsizilio.lunardocs.service;
 
 import io.gitgub.gabrielsizilio.lunardocs.domain.credential.Credential;
-import io.gitgub.gabrielsizilio.lunardocs.domain.credential.dto.CredentialRequestDTO;
-import io.gitgub.gabrielsizilio.lunardocs.domain.credential.dto.CredentialResponseDTO;
+import io.gitgub.gabrielsizilio.lunardocs.dto.credentialDto.CredentialRequestDTO;
+import io.gitgub.gabrielsizilio.lunardocs.dto.credentialDto.CredentialResponseDTO;
 import io.gitgub.gabrielsizilio.lunardocs.domain.user.User;
 import io.gitgub.gabrielsizilio.lunardocs.exception.customException.ConflictException;
 import io.gitgub.gabrielsizilio.lunardocs.exception.customException.UserNotFoundException;

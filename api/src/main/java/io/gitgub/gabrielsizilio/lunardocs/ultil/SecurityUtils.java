@@ -1,4 +1,4 @@
-package io.gitgub.gabrielsizilio.lunardocs.ultils;
+package io.gitgub.gabrielsizilio.lunardocs.ultil;
 
 import io.gitgub.gabrielsizilio.lunardocs.domain.credential.Credential;
 import org.springframework.security.core.context.SecurityContextHolder;
